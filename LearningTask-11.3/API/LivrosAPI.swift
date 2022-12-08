@@ -9,8 +9,10 @@ import Foundation
 
 class LivrosAPI {
     
-    var session: URLSession
-    var decoder: JSONDecoder
+    private let session: URLSession
+    private let decoder: JSONDecoder
+    
+    private var dataTask: URLSessionDataTask?
     
     init(session: URLSession = URLSession.shared, decoder: JSONDecoder = JSONDecoder()) {
         self.session = session
@@ -18,21 +20,30 @@ class LivrosAPI {
     }
     
     func listaLivros(por autor: Int?, completionHandler: @escaping (Result<[Livro], Error>) -> Void) {
+        dataTask?.cancel()
         
         guard let id = autor,
               let url = URL(string: "https://casadocodigo-api.herokuapp.com/api/author/\(id)/books") else { return }
         
-        let dataTask = session.dataTask(with: url) { [weak self] data, response, error in
+        dataTask = session.dataTask(with: url) { [weak self] data, response, error in
+            defer {
+                self?.dataTask = nil
+            }
             
             if let error = error {
                 DispatchQueue.main.async {
-                    completionHandler(.failure(error))
+                    completionHandler(.failure(.falhaAoProcessarRequisicao(error)))
                 }
                 
                 return
             }
             
-            guard let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
+            guard let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                DispatchQueue.main.async {
+                    completionHandler(.failure(.falhaAoObterResposta))
+                }
+                return
+            }
             
             do {
                 guard let self = self else { return }
@@ -43,11 +54,11 @@ class LivrosAPI {
                     completionHandler(.success(autores))
                 }
             } catch {
-                completionHandler(.failure(error))
+                completionHandler(.failure(.dadosInvalidos))
             }
         }
         
-        dataTask.resume()
+        dataTask?.resume()
     }
     
     func carregaTodos() -> [Livro] {
@@ -162,65 +173,28 @@ class LivrosAPI {
                   ]),
         ]
     }
+}
+
+extension LivrosAPI {
+    typealias SError = Swift.Error
     
-//    func carregaLivros(por autor: Autor) -> [Livro] {
-//        return [
-//            Livro(titulo: "Orientação a Objetos",
-//                  subtitulo: "Aprenda seus conceitos e suas aplicabilidades de forma efetiva",
-//                  imagemDeCapaURI: "https:s3.xpto.oo.jpeg",
-//                  autor: autor,
-//                  precos: [
-//                     Preco(valor: 19.9, tipoDeLivro: .ebook),
-//                     Preco(valor: 29.9, tipoDeLivro: .impresso),
-//                     Preco(valor: 39.9, tipoDeLivro: .combo),
-//                  ]),
-//            Livro(titulo: "ECMAScript 6",
-//                  subtitulo: "Descubra as novas features desta versão e entre de cabeça no futuro do JavaScript",
-//                  imagemDeCapaURI: "https:s3.xpto.ecmascript.jpeg",
-//                  autor: autor,
-//                  precos: [
-//                     Preco(valor: 19.9, tipoDeLivro: .ebook),
-//                     Preco(valor: 29.9, tipoDeLivro: .impresso),
-//                     Preco(valor: 39.9, tipoDeLivro: .combo),
-//                  ]),
-//            Livro(titulo: "React Native",
-//                  subtitulo: "Desenvolvimento de aplicativos mobile com React",
-//                  imagemDeCapaURI: "https:s3.xpto.reactNative.jpeg",
-//                  autor: autor,
-//                  precos: [
-//                     Preco(valor: 19.9, tipoDeLivro: .ebook),
-//                     Preco(valor: 29.9, tipoDeLivro: .impresso),
-//                     Preco(valor: 39.9, tipoDeLivro: .combo),
-//                  ]),
-//            Livro(titulo: "Orientação a Objetos e SOLID para Ninjas",
-//                  subtitulo: "Projetando classes flexíveis",
-//                  imagemDeCapaURI: "https:s3.xpto.ooSolid.jpeg",
-//                  autor: autor,
-//                  precos: [
-//                     Preco(valor: 19.9, tipoDeLivro: .ebook),
-//                     Preco(valor: 29.9, tipoDeLivro: .impresso),
-//                     Preco(valor: 39.9, tipoDeLivro: .combo),
-//                  ]),
-//            Livro(titulo: "Play Framework",
-//                  subtitulo: "Java para web sem Servlets e com diversão",
-//                  imagemDeCapaURI: "https:s3.xpto.play.jpeg",
-//                  autor: autor,
-//                  precos: [
-//                     Preco(valor: 19.9, tipoDeLivro: .ebook),
-//                     Preco(valor: 29.9, tipoDeLivro: .impresso),
-//                     Preco(valor: 39.9, tipoDeLivro: .combo),
-//                  ]),
-//            Livro(titulo: "Spring MVC",
-//                  subtitulo: "Domine o principal framework web Java",
-//                  imagemDeCapaURI: "https:s3.xpto.spring.jpeg",
-//                  autor: autor,
-//                  precos: [
-//                     Preco(valor: 19.9, tipoDeLivro: .ebook),
-//                     Preco(valor: 29.9, tipoDeLivro: .impresso),
-//                     Preco(valor: 39.9, tipoDeLivro: .combo),
-//                  ]),
-//        ]
-//    }
-    
+    enum Error: SError, LocalizedError {
+        case falhaAoProcessarRequisicao(SError)
+        case falhaAoObterResposta
+        case dadosInvalidos
+        
+        var errorDescription: String? {
+            switch self {
+            case .falhaAoProcessarRequisicao(let error):
+                return "Erro ao processar a requisição \(error.localizedDescription)"
+                
+            case .falhaAoObterResposta:
+                return "Erro ao obter resposta do servidor"
+                
+            case .dadosInvalidos:
+                return "Os dados recebidos do servidor são inválidos"
+            }
+        }
+    }
 }
 

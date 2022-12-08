@@ -40,7 +40,12 @@ class AutorViewController: UITableViewController {
         livrosAPI?.listaLivros(por: autor.id, completionHandler: { [weak self] result in
             switch result {
             case .failure(let error):
-                print(error)
+                let mensagem = """
+                                Não foi possível carregar os livros do autor.
+                                \(error.localizedDescription)
+                                """
+                
+                UIAlertController.showError(mensagem, in: self!)
             case .success(let livros):
                 self?.livrosDoAutor = livros
             }

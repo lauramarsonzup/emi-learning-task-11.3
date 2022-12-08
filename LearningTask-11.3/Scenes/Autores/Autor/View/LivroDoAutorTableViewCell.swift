@@ -20,10 +20,6 @@ class LivroDoAutorTableViewCell: UITableViewCell {
 
             tituloLabel.text = livro.titulo
             
-//            let imagem = UIImage(named: livro.imagemDeCapaURI) != nil
-//                ? livro.imagemDeCapaURI
-//                : "Book"
-            
             capaImageView.image = UIImage.init("Book",
                                                aspectFillIn: capaImageView.frame)
             capaImageView.carregar(url: livro.imagemURL!)

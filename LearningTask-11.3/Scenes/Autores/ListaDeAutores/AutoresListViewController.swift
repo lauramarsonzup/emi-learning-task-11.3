@@ -41,7 +41,12 @@ class AutoresListViewController: UITableViewController {
         autorAPI?.listaAutores(completionHandler: { [weak self] result in
             switch result {
             case .failure(let error):
-                print(error)
+                let mensagem = """
+                                Não foi possível carregar autores.
+                                \(error.localizedDescription)
+                                """
+                
+                UIAlertController.showError(mensagem, in: self!)
             case .success(let autores):
                 self?.autores = autores
             }
