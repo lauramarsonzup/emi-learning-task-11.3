@@ -26,7 +26,6 @@ class AutoresListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         applyTheme()
-        // Do any additional setup after loading the view.
     
         setupViews()
         carregaAutores()
@@ -39,8 +38,14 @@ class AutoresListViewController: UITableViewController {
     }
     
     private func carregaAutores() {
-        guard let autorAPI = autorAPI else { return }
-        self.autores = autorAPI.listaTodos()
+        autorAPI?.listaAutores(completionHandler: { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print(error)
+            case .success(let autores):
+                self?.autores = autores
+            }
+        })
     }
 
     // MARK: Navigation

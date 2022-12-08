@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0327452229425EB400C5CEFD /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0327452129425EB300C5CEFD /* UIImageView+Extension.swift */; };
 		58089E3B289AE503001F8607 /* LivrosListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58089E3A289AE503001F8607 /* LivrosListViewController.swift */; };
 		58089E3D289AE623001F8607 /* Carrinho.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58089E3C289AE623001F8607 /* Carrinho.swift */; };
 		58089E3F289AE660001F8607 /* SectionTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58089E3E289AE660001F8607 /* SectionTitleView.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0327452129425EB300C5CEFD /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		58089E3A289AE503001F8607 /* LivrosListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivrosListViewController.swift; sourceTree = "<group>"; };
 		58089E3C289AE623001F8607 /* Carrinho.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Carrinho.swift; sourceTree = "<group>"; };
 		58089E3E289AE660001F8607 /* SectionTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTitleView.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				5881AC51288B1C8E00F9A9CC /* AspectFillInFrame+UIImageView.swift */,
 				5846DE8E288EE59C00DF985F /* SimpleAlert+UIAlertController.swift */,
 				58089E48289AE717001F8607 /* Currency+NumberFormatter.swift */,
+				0327452129425EB300C5CEFD /* UIImageView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0327452229425EB400C5CEFD /* UIImageView+Extension.swift in Sources */,
 				58089E3D289AE623001F8607 /* Carrinho.swift in Sources */,
 				58089E4E289AE794001F8607 /* CarrinhoViewController.swift in Sources */,
 				5881AC70288B246600F9A9CC /* NovoAutorViewController.swift in Sources */,

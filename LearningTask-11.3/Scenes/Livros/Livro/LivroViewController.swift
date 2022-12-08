@@ -42,6 +42,8 @@ class LivroViewController: UIViewController {
                 precoImpressoLabel.text = valor
             case .combo:
                 precoComboLabel.text = valor
+            case .none:
+                print("")
             }
         }
     }

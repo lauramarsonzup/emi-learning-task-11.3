@@ -7,8 +7,9 @@
 
 import Foundation
 
-struct Autor {
-    let fotoURI: String
+struct Autor: Decodable {
+    var id: Int?
+    let foto: String
     let nome: String
     let sobrenome: String
     let bio: String
@@ -18,12 +19,16 @@ struct Autor {
         return "\(nome) \(sobrenome)"
     }
     
-    init(foto: String, nome: String, sobrenome: String, bio: String, tecnologias: [String]) {
-        fotoURI = foto
-        self.nome = nome
-        self.sobrenome = sobrenome
-        self.bio = bio
-        self.tecnologias = tecnologias
+    var fotoURL: URL? {
+        return URL(string: foto)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case bio, id
+        case foto = "profilePicturePath"
+        case nome = "firstName"
+        case sobrenome = "lastName"
+        case tecnologias = "technologiesSHeWritesAbout"
     }
 }
 

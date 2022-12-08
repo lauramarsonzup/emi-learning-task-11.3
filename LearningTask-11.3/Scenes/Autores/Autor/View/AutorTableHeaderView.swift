@@ -20,7 +20,8 @@ class AutorTableHeaderView: UIView {
     
         let imageView = UIImageView(frame: .init(origin: .zero, size: tamanhoBase))
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: autor.fotoURI) ?? placeholder
+        imageView.image = placeholder
+        imageView.carregar(url: autor.fotoURL!)
         imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = tamanhoBase.width / 2

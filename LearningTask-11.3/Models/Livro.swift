@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TipoDeLivro: CaseIterable {
+enum TipoDeLivro: CaseIterable, Decodable {
     case ebook
     case impresso
     case combo
@@ -35,23 +35,45 @@ enum TipoDeLivro: CaseIterable {
     }
 }
 
-struct Preco {
+struct Preco: Decodable {
     let valor: Decimal
-    let tipoDeLivro: TipoDeLivro
+    var tipoDeLivroString: String? {
+        didSet {
+            if tipoDeLivroString == "EBOOK" {
+                tipoDeLivro = .ebook
+            } else if tipoDeLivroString == "HARDCOVER" {
+                tipoDeLivro = .impresso
+            } else if tipoDeLivroString == "COMBO" {
+                tipoDeLivro = .combo
+            }
+        }
+    }
+    
+    var tipoDeLivro: TipoDeLivro?
+
+    
+    enum CodingKeys: String, CodingKey {
+        case valor = "value"
+        case tipoDeLivroString = "bookType"
+    }
 }
 
-struct Livro {
+struct Livro: Decodable {
     let titulo: String
     let subtitulo: String
     let imagemDeCapaURI: String
     let autor: Autor
     let precos: [Preco]
     
-    init(titulo: String, subtitulo: String, imagemDeCapaURI: String, autor: Autor, precos: [Preco]) {
-        self.titulo = titulo
-        self.subtitulo = subtitulo
-        self.imagemDeCapaURI = imagemDeCapaURI
-        self.autor = autor
-        self.precos = precos
+    var imagemURL: URL? {
+        return URL(string: imagemDeCapaURI)
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case titulo = "title"
+        case subtitulo = "subtitle"
+        case imagemDeCapaURI = "coverImagePath"
+        case autor = "author"
+        case precos = "prices"
     }
 }

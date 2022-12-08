@@ -37,8 +37,14 @@ class AutorViewController: UITableViewController {
     }
     
     private func carregaLivrosDoAutor() {
-        guard let livrosAPI = livrosAPI else { return }
-        livrosDoAutor = livrosAPI.carregaLivros(por: autor)
+        livrosAPI?.listaLivros(por: autor.id, completionHandler: { [weak self] result in
+            switch result {
+            case .failure(let error):
+                print(error)
+            case .success(let livros):
+                self?.livrosDoAutor = livros
+            }
+        })
     }
     
 }
